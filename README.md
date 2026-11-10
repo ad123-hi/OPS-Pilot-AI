@@ -1,6 +1,6 @@
 # OpsPilot AI
 
-Project foundation for OpsPilot AI: a React + TypeScript + Vite frontend and a FastAPI backend.
+Project foundation for OpsPilot AI: a React + TypeScript + Vite frontend in `frontend/` and a FastAPI backend in `backend/`.
 
 ## Requirements
 
@@ -12,6 +12,7 @@ Project foundation for OpsPilot AI: a React + TypeScript + Vite frontend and a F
 ## Frontend
 
 ```powershell
+cd frontend
 npm install
 npm run dev
 ```
@@ -22,7 +23,7 @@ Vite serves the app at <http://localhost:5173>.
 
 ```powershell
 cd backend
-py -m venv .venv
+python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
 python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
