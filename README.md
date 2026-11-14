@@ -7,7 +7,7 @@ Project foundation for OpsPilot AI: a React + TypeScript + Vite frontend in `fro
 - Node.js 20.19+ or 22.12+
 - Python 3.10+
 - Git
-- PostgreSQL (not needed for the initial health check)
+- PostgreSQL 14+ (local or remote)
 
 ## Frontend
 
@@ -19,16 +19,32 @@ npm run dev
 
 Vite serves the app at <http://localhost:5173>.
 
-## Backend
+## Backend and database
+
+First create a PostgreSQL role and database (substitute a strong password):
+
+```sql
+CREATE USER opspilot_user WITH PASSWORD 'your-strong-password';
+CREATE DATABASE opspilot_db OWNER opspilot_user;
+```
+
+In PowerShell, from the repository root:
 
 ```powershell
 cd backend
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
+Copy-Item .env.example .env
+```
+
+Edit `backend/.env` and set `DATABASE_URL` to your actual PostgreSQL credentials. URL-encode reserved characters in the password. Keep `.env` private; it is gitignored.
+
+Apply the initial database migration and start the API:
+
+```powershell
+alembic upgrade head
 python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-The API health check is at <http://127.0.0.1:8000/health>; interactive docs are at <http://127.0.0.1:8000/docs>.
-
-Copy the relevant `.env.example` to `.env` and update values for local configuration. Do not commit `.env` files.
+Check <http://127.0.0.1:8000/health> for database connectivity and <http://127.0.0.1:8000/docs> for API documentation. `/health` returns HTTP 503 if PostgreSQL is unavailable. Alembic creates `organizations`, `users`, `teams`, `team_members`, and its own `alembic_version` tracking table.
