@@ -4,9 +4,13 @@ from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
+from app.api.auth import router as auth_router
+from app.api.organizations import router as organizations_router
 from app.db.session import get_db
 
 app = FastAPI(title=settings.APP_NAME, version="1.0.0")
+app.include_router(auth_router)
+app.include_router(organizations_router)
 
 app.add_middleware(
     CORSMiddleware,
