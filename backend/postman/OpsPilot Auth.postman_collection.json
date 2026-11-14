@@ -1,0 +1,49 @@
+{
+  "info": {
+    "name": "OpsPilot Authentication",
+    "description": "Register a tenant admin, authenticate, inspect identity, and revoke tokens. Set base_url to the running API URL.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://127.0.0.1:8000" },
+    { "key": "organization_id", "value": "" },
+    { "key": "access_token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Register organization admin",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"organization_name\": \"Example Operations\",\n  \"full_name\": \"Taylor Admin\",\n  \"email\": \"taylor@example.com\",\n  \"password\": \"ChangeMe-12345\"\n}" },
+        "url": "{{base_url}}/auth/register"
+      },
+      "event": [{ "listen": "test", "script": { "exec": ["pm.test('registration returns 201', () => pm.response.to.have.status(201));", "const data = pm.response.json();", "pm.collectionVariables.set('access_token', data.access_token);", "pm.collectionVariables.set('organization_id', data.user.organization_id);", "pm.test('first user is admin', () => pm.expect(data.user.role).to.eql('admin'));"], "type": "text/javascript" } }]
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"organization_id\": {{organization_id}},\n  \"email\": \"taylor@example.com\",\n  \"password\": \"ChangeMe-12345\"\n}" },
+        "url": "{{base_url}}/auth/login"
+      },
+      "event": [{ "listen": "test", "script": { "exec": ["pm.test('login succeeds', () => pm.response.to.have.status(200));", "pm.collectionVariables.set('access_token', pm.response.json().access_token);"], "type": "text/javascript" } }]
+    },
+    {
+      "name": "Get current user",
+      "request": { "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{access_token}}", "type": "string" }] }, "method": "GET", "url": "{{base_url}}/auth/me" },
+      "event": [{ "listen": "test", "script": { "exec": ["pm.test('identity is returned', () => pm.response.to.have.status(200));", "pm.test('identity is tenant admin', () => pm.expect(pm.response.json().role).to.eql('admin'));"], "type": "text/javascript" } }]
+    },
+    {
+      "name": "Logout",
+      "request": { "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{access_token}}", "type": "string" }] }, "method": "POST", "url": "{{base_url}}/auth/logout" },
+      "event": [{ "listen": "test", "script": { "exec": ["pm.test('logout succeeds', () => pm.response.to.have.status(204));"], "type": "text/javascript" } }]
+    },
+    {
+      "name": "Verify logged-out token is rejected",
+      "request": { "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{access_token}}", "type": "string" }] }, "method": "GET", "url": "{{base_url}}/auth/me" },
+      "event": [{ "listen": "test", "script": { "exec": ["pm.test('revoked token is rejected', () => pm.response.to.have.status(401));"], "type": "text/javascript" } }]
+    }
+  ]
+}
