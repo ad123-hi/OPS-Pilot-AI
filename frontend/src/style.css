@@ -1,19 +1,45 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
 
-:root { font-family: 'DM Sans', sans-serif; color: #17251f; background: #f5f7f4; font-synthesis: none; text-rendering: optimizeLegibility; }
-* { box-sizing: border-box; }
-body { margin: 0; min-width: 320px; min-height: 100vh; background: radial-gradient(ellipse at 75% 10%, #e3eee3 0, transparent 42%), #f5f7f4; }
-.shell { min-height: 100vh; padding: 34px 7.5vw 24px; display: flex; flex-direction: column; }
-.badge { display: flex; align-items: center; gap: 9px; font-weight: 700; font-size: 14px; letter-spacing: -.02em; }
-.dot { width: 9px; height: 9px; border-radius: 50%; background: #5f9870; box-shadow: 0 0 0 4px #dce9dc; }
-.badge-label { margin-left: 7px; padding: 5px 9px; border: 1px solid #dce3db; border-radius: 20px; color: #77847a; font-size: 9px; letter-spacing: .12em; }
-.hero { width: min(720px, 100%); margin: auto 0; padding: 105px 0 115px 8vw; }
-.eyebrow { color: #63836b; font-size: 11px; font-weight: 700; letter-spacing: .19em; }
-h1 { margin: 22px 0; font-family: Manrope, sans-serif; font-size: clamp(48px, 7vw, 82px); line-height: 1.06; letter-spacing: -.065em; font-weight: 600; }
-h1 span { color: #71917a; }
-.intro { max-width: 380px; color: #68746c; font-size: 16px; line-height: 1.8; }
-.status { margin-top: 38px; padding: 15px 18px; display: flex; align-items: center; gap: 13px; width: fit-content; border: 1px solid #e0e6de; border-radius: 10px; background: #ffffffa8; }
-.status-icon { width: 25px; height: 25px; display: grid; place-items: center; border-radius: 50%; background: #e4efe3; color: #4a8257; font-weight: 700; }
-.status strong, .status small { display: block; }.status strong { font-size: 12px; }.status small { margin-top: 3px; color: #89938b; font-size: 11px; }
-footer { display: flex; justify-content: space-between; color: #9aa39b; font-size: 9px; letter-spacing: .13em; font-weight: 700; }
-@media (max-width: 600px) { .shell { padding: 24px; }.hero { padding: 72px 0; }footer { font-size: 8px; } }
+@layer base {
+  :root {
+    font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    color: #17201e;
+    background: #f5f7f6;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    min-width: 320px;
+    min-height: 100vh;
+  }
+
+  button,
+  input {
+    font: inherit;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+
+  ::selection {
+    color: #fff;
+    background: #26705f;
+  }
+}
+
+@layer utilities {
+  .auth-pattern {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: linear-gradient(to bottom right, black, transparent 85%);
+  }
+}
